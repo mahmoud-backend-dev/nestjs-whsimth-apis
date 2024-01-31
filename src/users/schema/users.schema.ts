@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService } from "@nestjs/jwt";;
 
 @Schema()
 export class AddressSchema{
@@ -9,11 +9,11 @@ export class AddressSchema{
   address: string;
 };
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema({
+  timestamps: true,
+  versionKey: false,
+})
 export class User extends Document {
-  constructor(private readonly jwtService: JwtService) {
-    super();
-  }
 
   @Prop({ type: String, required: true })
   firstName: string;
@@ -27,7 +27,7 @@ export class User extends Document {
   @Prop({ type: String, required: true, minlength: 8 })
   password: string;
 
-  @Prop({ type: Types.ObjectId, required: true, ref: 'Role', default: null })
+  @Prop({ type: Types.ObjectId, ref: 'Role', default: null })
   role: Types.ObjectId;
 
   @Prop({ type: Date })
@@ -57,20 +57,28 @@ export class User extends Document {
   @Prop({ type: Boolean, default: false })
   banForever: boolean;
 
+
   createJWTForConfirmEmail(): string{
-    return this.jwtService
-      .sign({ userIdForSignup: 1, id: this._id },{expiresIn:'60s'})
+    const jwtService = new JwtService(); 
+    return jwtService.sign(
+      { userIdForSignup: 1, userId: this._id },
+      { secret: process.env.JWT_SECRET, expiresIn: '1h' },
+    );
   }
 
   createJWTForConfirmResetPassword(): string{
-    return this.jwtService
-      .sign({ userIdForResetPassword: 2, id: this._id },{expiresIn:'60s'})
+    const jwtService = new JwtService();
+    return jwtService.sign(
+      { userIdForResetPassword: 2, userId: this._id },
+      { secret: process.env.JWT_SECRET, expiresIn: '1h' },
+    );
   }
 
   createJWTForAuthorizedUser(): string {
-    return this.jwtService.sign(
+    const jwtService = new JwtService();
+    return jwtService.sign(
       { userId: this._id },
-      { expiresIn: '30d' }
+      { secret: process.env.JWT_SECRET, expiresIn: '30d' }
     )
   }
   
@@ -84,3 +92,4 @@ export class User extends Document {
 };
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.loadClass(User)
