@@ -8,6 +8,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RolesModule } from './roles/roles.module';
 import { StoresModule } from './stores/stores.module';
+import { IsUserNotExistConstraint } from './users/validation/user-not-exist.rule';
+import { IsStoreAlreadyExistConstraint } from './roles/validation/is-store-already-for-manage-order.rule';
+import { IsUserAlreadyExistConstraint } from './users/validation/user-already-exist.rule';
+import { UpdateRoleConstraintIdParam } from './roles/validation/update-role.rule';
 
 @Module({
   imports: [
@@ -28,6 +32,12 @@ import { StoresModule } from './stores/stores.module';
     StoresModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    IsUserNotExistConstraint,
+    IsStoreAlreadyExistConstraint,
+    IsUserAlreadyExistConstraint,
+    UpdateRoleConstraintIdParam,
+  ],
 })
 export class AppModule {}

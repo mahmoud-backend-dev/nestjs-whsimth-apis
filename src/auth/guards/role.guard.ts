@@ -21,7 +21,6 @@ export class RolesGuard implements CanActivate {
       
     }
     const permissions = request['user']['role']['permissions'];
-    console.log({ user: request['user'] });
     if (!matchPermissions(permissions, roles))
       throw new UnauthorizedException('You do not have permission to access this resource');
     return true;

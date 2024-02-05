@@ -1,4 +1,13 @@
-import { BadRequestException, Body, Controller, ParseFilePipeBuilder, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  ParseFilePipeBuilder,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { StoresService } from './stores.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
@@ -23,8 +32,10 @@ export class StoresController {
         .addFileTypeValidator({ fileType: 'image' })
         .build({
           fileIsRequired: true,
-          exceptionFactory: () => new BadRequestException('image is required and must be an image'),
-        }))
+          exceptionFactory: () =>
+            new BadRequestException('image is required and must be an image'),
+        }),
+    )
     file: Express.Multer.File,
     @Body()
     createStoreDto: CreateStoreDto,

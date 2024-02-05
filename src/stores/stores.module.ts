@@ -31,5 +31,6 @@ import { Request } from 'express';
   ],
   controllers: [StoresController],
   providers: [StoresService],
+  exports:[MongooseModule]
 })
 export class StoresModule {}

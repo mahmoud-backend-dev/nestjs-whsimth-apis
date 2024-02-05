@@ -19,6 +19,7 @@ export class Store extends Document {
         minlength: [3, 'english name must be at least 3 characters'],
       },
     },
+    _id: false,
   })
   name: {
     ar: string;
@@ -36,6 +37,7 @@ export class Store extends Document {
         required: [true, 'english region required'],
       },
     },
+    _id: false,
   })
   region: {
     ar: string;
@@ -52,7 +54,8 @@ export class Store extends Document {
         type: String,
         required: [true, 'english city required'],
       },
-    }
+    },
+    _id: false,
   })
   city: {
     ar: string;
