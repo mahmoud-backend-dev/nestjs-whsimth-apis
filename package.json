@@ -30,6 +30,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.0",
+    "@types/express-serve-static-core": "^4.17.43",
     "@types/uuid": "^9.0.8",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",

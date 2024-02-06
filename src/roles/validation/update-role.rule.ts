@@ -7,7 +7,7 @@ import {
   isMongoId,
   registerDecorator,
 } from 'class-validator';
-import { Role } from '../schema/role.schema';
+import { Permissions, Role } from '../schema/role.schema';
 import { Model } from 'mongoose';
 import {
   BadRequestException,
@@ -28,6 +28,8 @@ export class UpdateRoleConstraintIdParam
     if(!isMongoId(id)) throw new BadRequestException('role id is invalid');
     const role = await this.roleModel.findById(id);
     if (!role) throw new NotFoundException('role does not exist');
+    if (role.permissions.includes(Permissions.OWNER) || role.permissions.includes(Permissions.ADMIN))
+      throw new BadRequestException('you are not update this role');
     return true;
   }
 

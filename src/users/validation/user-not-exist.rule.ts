@@ -18,13 +18,14 @@ export class IsUserNotExistConstraint implements ValidatorConstraintInterface {
     private readonly userModel: Model<User>,
   ) {}
 
-  async validate(id: string): Promise<boolean> {
+  async validate(id: string, args: ValidationArguments): Promise<boolean> {
     if (!id) return false;
     if(!isMongoId(id)) throw new ForbiddenException('Invalid user id');
     const user = await this.userModel.findById(id);
     if (!user) throw new NotFoundException('user does not exist');
     return true;
   }
+
   defaultMessage(validationArguments?: ValidationArguments): string {
     return 'id is required and must be valid user id';
   }
