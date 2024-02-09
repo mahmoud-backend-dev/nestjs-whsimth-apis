@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { NextFunction } from 'express-serve-static-core';
 import { Document, Types } from 'mongoose';
+import { Product } from 'src/products/schema/product.schema';
+import { Store } from 'src/stores/schema/store.schema';
+import { User } from 'src/users/schema/users.schema';
 
 @Schema({
   timestamps: true,
@@ -14,22 +17,22 @@ export class Cart extends Document {
         product: {
           type: Types.ObjectId,
           required: [true, 'product required'],
-          ref: 'Product',
+          ref: Product.name,
         },
         quantity: { type: Number, default: 1 },
       },
     ],
   })
   cartItems: {
-    product: Types.ObjectId;
+    product: Product;
     quantity: number;
   }[];
 
   @Prop({
     type: Types.ObjectId,
-    ref: 'Store',
+    ref: Store.name,
   })
-  store: Types.ObjectId;
+  store: Store;
 
   @Prop({
     type: Number,
@@ -40,9 +43,9 @@ export class Cart extends Document {
   @Prop({
     type: Types.ObjectId,
     required: [true, 'user required'],
-    ref: 'User',
+    ref: User.name,
   })
-  user: Types.ObjectId;
+  user: User;
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);

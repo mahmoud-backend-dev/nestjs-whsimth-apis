@@ -81,7 +81,7 @@ export class SectionOne extends Document {
   @Prop({
     type: [{ type: Types.ObjectId, ref: Product.name, _id: false }],
   })
-  products: Types.ObjectId[];
+  products: Product[];
 }
 
 @Schema({
@@ -149,7 +149,7 @@ export class SectionThree extends Document {
   @Prop({
     type: [{ type: Types.ObjectId, ref: Product.name, _id: false }],
   })
-  products: Types.ObjectId[];
+  products: Product[];
 }
 
 @Schema({
@@ -172,7 +172,7 @@ export class SectionFour extends Document {
   @Prop({
     type: [{ type: Types.ObjectId, ref: Category.name, _id: false }],
   })
-  categories: Types.ObjectId[];
+  categories: Category[];
 }
 
 @Schema({

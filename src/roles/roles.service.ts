@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Role } from './schema/role.schema';
+import { Permissions, Role } from './schema/role.schema';
 import { Model, Types } from 'mongoose';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { User } from 'src/users/schema/users.schema';
@@ -96,7 +96,7 @@ export class RolesService {
       path: 'role',
       select: 'name permissions',
     });
-    if (user.role === null || !user.role['permissions'].includes('admin'))
+    if (user.role === null || !user.role['permissions'].includes(Permissions.ADMIN))
       throw new BadRequestException('This user not admin');
     await this.userModel.findByIdAndUpdate(
       id,
@@ -135,8 +135,7 @@ export class RolesService {
       path: 'role',
       select: 'name permissions',
     });
-    console.log(user)
-    if (user.role === null || !user.role['permissions'].includes('owner'))
+    if (user.role === null || !user.role['permissions'].includes(Permissions.OWNER))
       throw new BadRequestException('This user not owner');
     await this.userModel.findByIdAndUpdate(
       id,

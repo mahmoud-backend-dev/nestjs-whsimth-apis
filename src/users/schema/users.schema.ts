@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import * as bcrypt from 'bcrypt';
-import { JwtService } from "@nestjs/jwt";;
+import { JwtService } from "@nestjs/jwt";import { Role } from "src/roles/schema/role.schema";
+;
 
 @Schema()
 export class AddressSchema{
@@ -27,8 +28,8 @@ export class User extends Document {
   @Prop({ type: String, required: true, minlength: 8 })
   password: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Role', default: null })
-  role: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: Role.name, default: null })
+  role: Role;
 
   @Prop({ type: Date })
   passwordChangedAt: Date;

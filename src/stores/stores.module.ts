@@ -9,10 +9,12 @@ import { diskStorage } from 'multer';
 import { v4 } from 'uuid';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { Request } from 'express';
+import { ProductsModule } from 'src/products/products.module';
 
 @Module({
   imports: [
     AuthModule,
+    ProductsModule,
     MongooseModule.forFeature([{ name: Store.name, schema: StoreSchema }]),
     ServeStaticModule.forRoot({
       rootPath: 'src/stores/uploads',

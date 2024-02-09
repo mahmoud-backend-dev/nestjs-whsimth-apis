@@ -2,11 +2,14 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  Headers,
   Param,
   ParseFilePipeBuilder,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -19,8 +22,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateStoreDto } from './dto/create-store.dto';
 import {
   UpdateStoreBodyDto,
-  UpdateStoreIdParamDto
+  UpdateStoreIdParamDto,
 } from './dto/update-store.dto';
+import { Query as queryExpress } from 'express-serve-static-core';
 
 @Controller({
   path: 'stores',
@@ -80,8 +84,30 @@ export class StoresController {
   @Get('one/:id')
   async getOneStore(
     @Param()
-    params: UpdateStoreIdParamDto
-  ): Promise<object>{
+    params: UpdateStoreIdParamDto,
+  ): Promise<object> {
     return await this.storesService.getOneStore(params.id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('owner', 'admin', 'manage store')
+  @Delete('remove/:id')
+  async removeStore(
+    @Param()
+    params: UpdateStoreIdParamDto,
+  ): Promise<object> {
+    return await this.storesService.removeStore(params.id);
+  }
+
+  @Get('all')
+  async getAllStores(
+    @Query('store')
+    storeQuery: string,
+    @Query()
+    query: queryExpress,
+    @Headers('accept-language')
+    lang: string,
+  ): Promise<object> {
+    return await this.storesService.getAllStores(lang, storeQuery, query);
   }
 }

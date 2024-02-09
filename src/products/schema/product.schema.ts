@@ -1,5 +1,7 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { Category } from 'src/gategories/schema/gategory.schema';
+import { Store } from 'src/stores/schema/store.schema';
 
 @Schema({
   timestamps: true,
@@ -100,7 +102,7 @@ export class Product extends Document {
       {
         store: {
           type: Types.ObjectId,
-          ref: 'Store',
+          ref: Store.name,
           required: [true, 'Product must be belongs to store'],
         },
         price: {
@@ -123,7 +125,7 @@ export class Product extends Document {
     ],
   })
   stores: {
-    store: Types.ObjectId;
+    store: Store;
     price: number;
     priceAfterDiscount: number;
     quantity: number;
@@ -132,11 +134,13 @@ export class Product extends Document {
 
   @Prop({
     type: Types.ObjectId,
-    ref: 'Category',
+    ref: Category.name,
     required: [true, 'Product must be belongs to category'],
   })
-  category: Types.ObjectId;
+  category: Category;
 
   @Prop({ type: Boolean, default: false })
   isArchive: boolean;
 }
+
+export const ProductSchema = SchemaFactory.createForClass(Product);

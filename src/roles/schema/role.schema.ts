@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
+import { Store } from "src/stores/schema/store.schema";
 
 export enum Permissions {
   OWNER = 'owner',
@@ -25,8 +26,8 @@ export class Role extends Document {
   @Prop({ type: [String], enum: Permissions, required: true })
   permissions: Permissions[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Store' })
-  store: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: Store.name })
+  store: Store;
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);

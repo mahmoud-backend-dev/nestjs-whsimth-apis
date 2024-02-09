@@ -5,12 +5,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreBodyDto } from './dto/update-store.dto';
 import { unlink } from 'fs/promises';
+import { Product } from 'src/products/schema/product.schema';
+import { paginate } from 'src/utils/pagination';
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class StoresService {
   constructor(
     @InjectModel(Store.name)
     private storeModel: Model<Store>,
+    @InjectModel(Product.name)
+    private productModel: Model<Product>,
   ) {}
 
   async createStore(
@@ -56,11 +61,50 @@ export class StoresService {
     };
   }
 
-  // async deleteStore(id: string): Promise<object> {
-  //   const store = await this.storeModel.findByIdAndUpdate(id, {
-  //     isArchive: true,
-  //   });
-  //   await unlink(`src/stores/uploads/${store.image.split('/').pop()}`);
-  //   await 
-  // }
+  async removeStore(id: string): Promise<object> {
+    const store = await this.storeModel.findByIdAndUpdate(id, {
+      isArchive: true,
+    });
+    await unlink(`src/stores/uploads/${store.image.split('/').pop()}`);
+    const products = await this.productModel.find({
+      'stores.store': store._id,
+    });
+    for (const product of products) {
+      product.stores = product.stores.filter(
+        (store) => store.store.toString() !== id.toString(),
+      );
+      await product.save();
+    }
+    return {
+      status: 'success',
+      message: 'store deleted successfully',
+    };
+  }
+
+  async getAllStores(
+    lang: string,
+    storeQuery: string,
+    query: Query,
+  ): Promise<object> {
+    lang = lang !== ('ar' || 'en') ? 'en' : lang;
+    const regexPatternStore = storeQuery ? new RegExp(storeQuery, 'i') : /.*/;
+    const { limit, pagination, skip } = await paginate(this.storeModel, query);
+    const stores = await this.storeModel
+      .find({
+        isArchive: false,
+        $or: [
+          { 'name.ar': { $regex: regexPatternStore } },
+          { 'name.en': { $regex: regexPatternStore } },
+        ],
+      })
+      .skip(skip)
+      .limit(limit)
+      .select(`name.${lang} region.${lang} city.${lang} image`);
+    return {
+      status: 'success',
+      count: stores.length,
+      pagination,
+      stores,
+    };
+  }
 }

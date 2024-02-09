@@ -22,7 +22,7 @@ export class Order extends Document {
     ref: User.name,
     required: [true, 'user is required'],
   })
-  user: Types.ObjectId;
+  user: User;
 
   @Prop({
     type: [
@@ -45,7 +45,7 @@ export class Order extends Document {
     ],
   })
   cartItems: {
-    product: Types.ObjectId;
+    product: Product;
     name: { ar: string; en: string };
     description: { ar: string; en: string };
     author: { ar: string; en: string };
@@ -60,7 +60,7 @@ export class Order extends Document {
     type: Types.ObjectId,
     ref: Store.name,
   })
-  store: Types.ObjectId;
+  store: Store;
 
   @Prop({
     type: Number,
