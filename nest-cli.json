@@ -7,7 +7,7 @@
   },
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["mail/templates","users/uploads"],
+    "assets": ["mail/templates","stores/uploads"],
     "watchAssets": true
   }
 }

@@ -12,6 +12,12 @@ import { IsUserNotExistConstraint } from './users/validation/user-not-exist.rule
 import { IsStoreAlreadyExistConstraint } from './roles/validation/is-store-already-for-manage-order.rule';
 import { IsUserAlreadyExistConstraint } from './users/validation/user-already-exist.rule';
 import { UpdateRoleConstraintIdParam } from './roles/validation/update-role.rule';
+import { StoreExistOrNotConstraint } from './stores/validation/store-exist-or-not.rule';
+import { ProductsModule } from './products/products.module';
+import { GategoriesModule } from './gategories/gategories.module';
+import { CartsModule } from './carts/carts.module';
+import { HomePageModule } from './home-page/home-page.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -30,6 +36,11 @@ import { UpdateRoleConstraintIdParam } from './roles/validation/update-role.rule
     UsersModule,
     RolesModule,
     StoresModule,
+    ProductsModule,
+    GategoriesModule,
+    CartsModule,
+    HomePageModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
@@ -38,6 +49,7 @@ import { UpdateRoleConstraintIdParam } from './roles/validation/update-role.rule
     IsStoreAlreadyExistConstraint,
     IsUserAlreadyExistConstraint,
     UpdateRoleConstraintIdParam,
+    StoreExistOrNotConstraint,
   ],
 })
 export class AppModule {}

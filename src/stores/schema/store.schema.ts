@@ -7,7 +7,7 @@ import { Document } from "mongoose";
 })
 export class Store extends Document {
   @Prop({
-    type:{
+    type: {
       ar: {
         type: String,
         required: [true, 'arabic name required'],
@@ -18,8 +18,8 @@ export class Store extends Document {
         required: [true, 'english name required'],
         minlength: [3, 'english name must be at least 3 characters'],
       },
+      _id: false,
     },
-    _id: false,
   })
   name: {
     ar: string;
@@ -36,8 +36,8 @@ export class Store extends Document {
         type: String,
         required: [true, 'english region required'],
       },
+      _id: false,
     },
-    _id: false,
   })
   region: {
     ar: string;
@@ -54,8 +54,8 @@ export class Store extends Document {
         type: String,
         required: [true, 'english city required'],
       },
+      _id: false,
     },
-    _id: false,
   })
   city: {
     ar: string;

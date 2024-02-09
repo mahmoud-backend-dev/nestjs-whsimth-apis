@@ -1,34 +1,27 @@
+import { Type } from 'class-transformer';
+import { IsNotEmpty, MinLength, ValidateNested } from 'class-validator';
 
-import { Type } from "class-transformer";
-import {
-  IsNotEmpty,
-  IsString,
-  ValidateNested,
-} from "class-validator";
-
-export class ArAndEr {
-  @IsNotEmpty({ message: 'key en is required' })
-  @IsString({ message: 'key ar is required' })
+export class ArAndEn {
+  @MinLength(3, { message: 'key ar must be at least 3 characters' })
   ar: string;
 
-  @IsNotEmpty({ message: 'key en is required' })
-  @IsString({ message: 'key en is required' })
+  @MinLength(3, { message: 'key en must be at least 3 characters' })
   en: string;
 }
 
 export class CreateStoreDto {
   @IsNotEmpty({ message: 'name must be object two keys ar and en' })
   @ValidateNested({ message: 'name must be object two keys ar and en' })
-  @Type(() => ArAndEr)
-  name: ArAndEr;
+  @Type(() => ArAndEn)
+  name: ArAndEn;
 
   @IsNotEmpty({ message: 'region must be object two keys ar and en' })
   @ValidateNested({ message: 'region must be object two keys ar and en' })
-  @Type(() => ArAndEr)
-  region: ArAndEr;
+  @Type(() => ArAndEn)
+  region: ArAndEn;
 
   @IsNotEmpty({ message: 'city must be object two keys ar and en' })
   @ValidateNested({ message: 'city must be object two keys ar and en' })
-  @Type(() => ArAndEr)
-  city: ArAndEr;
+  @Type(() => ArAndEn)
+  city: ArAndEn;
 }
