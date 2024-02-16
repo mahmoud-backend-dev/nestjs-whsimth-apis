@@ -3,15 +3,14 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Patch,
-  Post, 
-  UseInterceptors
+  Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { UserSanitizer } from './interceptors/user-sanitize.interceptor';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
-
 
 @Controller({
   path: 'auth',
@@ -34,7 +33,7 @@ export class AuthController {
     @Body('token')
     token: string,
   ): Promise<object> {
-    const data:object = await this.authService.verifyConfirmEmail(token);
+    const data: object = await this.authService.verifyConfirmEmail(token);
     const { _id: id, ...result } = data['user'].toObject();
     return {
       status: 'success',
@@ -50,11 +49,24 @@ export class AuthController {
     loginDto: LoginDto,
   ): Promise<object> {
     const data: object = await this.authService.login(loginDto);
-    const { _id: id, ...result } = data['user'].toObject();
+    const { _id: id, role, ...result } = data['user'].toObject();
+    let idRole: string, resultRole: object;
+    if (role !== null) {
+      idRole = role['_id'];
+      resultRole = role;
+      delete resultRole['_id'];
+    }
     return {
       status: 'success',
       message: 'User logged in successfully',
-      user: new UserSanitizer({ _id: id.toString(), ...result }),
+      user: new UserSanitizer({
+        _id: id.toString(),
+        role: role === null ? null : {
+          _id: idRole?.toString(),
+          ...resultRole,
+        },
+        ...result,
+      }),
       token: data['token'],
     };
   }
@@ -90,9 +102,7 @@ export class AuthController {
     @Body()
     resetPasswordDto: ResetPasswordDto,
   ): Promise<object> {
-    const data: object = await this.authService.resetPassword(
-      resetPasswordDto,
-    );
+    const data: object = await this.authService.resetPassword(resetPasswordDto);
     const { _id: id, ...result } = data['user'].toObject();
     return {
       status: data['status'],
