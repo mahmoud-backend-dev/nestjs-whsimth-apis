@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { paginate } from 'src/utils/pagination';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class CategoriesService {
@@ -31,14 +32,18 @@ export class CategoriesService {
     };
   }
 
-  async getAllCategories(lang: string, query: any): Promise<object> {
+  async getAllCategories(
+    lang: string,
+    query: Query,
+    categoryQuery: string,
+  ): Promise<object> {
     lang = lang !== ('ar' || 'en') ? 'en' : lang;
     const { limit, pagination, skip } = await paginate(
       this.categoryModel,
       query,
     );
-    const regexPatternCategory = query.category
-      ? new RegExp(query.category, 'i')
+    const regexPatternCategory = categoryQuery
+      ? new RegExp(categoryQuery, 'i')
       : /.*/;
     const categories = await this.categoryModel
       .find({

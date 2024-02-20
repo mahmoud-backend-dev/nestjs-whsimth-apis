@@ -39,9 +39,15 @@ export class CategoriesController {
     @Headers('accept-language')
     lang: string,
     @Query()
-    query:queryExpress
+    query: queryExpress,
+    @Query('category')
+    categoryQuery: string
   ): Promise<object> {
-    return await this.categoriesService.getAllCategories(lang, query);
+    return await this.categoriesService.getAllCategories(
+      lang,
+      query,
+      categoryQuery,
+    );
   }
 
   @Delete('remove/:id')

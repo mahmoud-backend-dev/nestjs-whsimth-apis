@@ -89,7 +89,7 @@ export class AuthService {
       });
     if (user && !user.resetVerifyForSignup)
       throw new BadRequestException('Please verify your email first');
-    if(!user || !user.comparePassword(loginDto.password))
+    if (!user || !await user.comparePassword(loginDto.password))
       throw new UnauthorizedException('Invalid credentials');
     const token = user.createJWTForAuthorizedUser();
     return {
