@@ -144,7 +144,7 @@ export class AuthService {
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<object> {
     const user = await this.userModel.findOne({ email: resetPasswordDto.email });
-    if (!user || !user.resetCodeExpiredForSignup)
+    if (!user || user.resetVerifyForResetPassword !== true)
       throw new NotFoundException('User not found');
     if (!user.resetVerifyForResetPassword)
       throw new BadRequestException('Please verify your email first');

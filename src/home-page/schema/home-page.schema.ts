@@ -205,7 +205,7 @@ export class SectionFive extends Document {
 export class HomePage extends Document {
   @Prop({
     type: MainSection,
-    _id: false,
+    _id: false
   })
   mainSection: MainSection;
 

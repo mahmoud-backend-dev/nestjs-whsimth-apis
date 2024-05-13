@@ -19,6 +19,7 @@ import { CartsModule } from './carts/carts.module';
 import { HomePageModule } from './home-page/home-page.module';
 import { OrdersModule } from './orders/orders.module';
 import { CategoryExistOrNotConstraint } from './categories/validation/category-exist-or-not.rule';
+import { ProductExistOrNotConstraint } from './home-page/validation/product-exist-or-not.rule';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { CategoryExistOrNotConstraint } from './categories/validation/category-e
     UpdateRoleConstraintIdParam,
     StoreExistOrNotConstraint,
     CategoryExistOrNotConstraint,
+    ProductExistOrNotConstraint
   ],
 })
 export class AppModule {}
