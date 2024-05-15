@@ -6,6 +6,7 @@ import { AddMainSectionDto } from './dto/add-main-section.dto';
 import { unlink } from 'fs/promises';
 import { UpdateMainSectionDto } from './dto/update-main-section.dto';
 import { AddSectionOneDto } from './dto/add-section-one.dto';
+import { AddSectionTwoDto } from './dto/add-section-two.dto';
 
 @Injectable()
 export class HomePageService {
@@ -121,6 +122,65 @@ export class HomePageService {
       status: 'success',
       message: 'add section one successfully',
       sectionOne: sectionOne.sectionOne,
+    };
+  };
+  
+  async getSectionOne(): Promise<object>{
+    const sectionOne = await this.homePageModel
+      .findOne({})
+      .populate({
+        path: 'sectionOne.products',
+        select: `images name author price priceAfterDiscount`,
+      })
+      .select(`sectionOne.label sectionOne.description`);;
+    return {
+      status: 'success',
+      message: 'get section one successfully',
+      sectionOne: sectionOne?.sectionOne ?? null
+    }
+  };
+
+  async addSectionTwo(addSectionTwoDto: AddSectionTwoDto,files:Express.Multer.File[]): Promise<object>{
+    const sectionTwo = await this.homePageModel.findOne({});
+    if (!sectionTwo) {
+      const data: Record<string, any> = {};
+      if (files) {
+        const images = files.map(
+          (file) => `${process.env.BASE_URL}/section-two/${file.filename}`,
+        );
+        data['images'] = images;
+      }
+      if (addSectionTwoDto.label) data['label'] = addSectionTwoDto.label;
+      if (addSectionTwoDto.description) data['description'] = addSectionTwoDto.description;
+      const sectionTwo = await this.homePageModel.create({ sectionTwo: data });
+      return {
+        status: 'success',
+        message: 'add section two successfully',
+        sectionTwo: sectionTwo.sectionTwo,
+      };
+    }
+    const data: Record<string, any> = {};
+    if (files) {
+      const images = files.map(
+        (file) => `${process.env.BASE_URL}/section-two/${file.filename}`,
+      );
+      data['images'] = images;
+      if (sectionTwo.sectionTwo && sectionTwo.sectionTwo.images) {
+        await Promise.all(sectionTwo.sectionTwo.images.map((img) => {
+          return unlink(`src/home-page/uploads/section-two/${img.split('/').pop()}`)
+        }))
+      }
+    }
+    if (addSectionTwoDto.label) data['label'] = addSectionTwoDto.label;
+    if (addSectionTwoDto.description) data['description'] = addSectionTwoDto.description;
+    sectionTwo.sectionTwo.label = data['label'];
+    sectionTwo.sectionTwo.description = data['description'];
+    sectionTwo.sectionTwo.images = data['images'];
+    await sectionTwo.save();
+    return {
+      status: 'success',
+      message: 'add section two successfully',
+      sectionTwo: sectionTwo.sectionTwo,
     };
   }
 }
