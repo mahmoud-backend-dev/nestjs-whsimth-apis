@@ -1,23 +1,30 @@
-import { Query } from 'express-serve-static-core';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 
-export const paginate = async (model: Model<any>, query: Query) => {
+interface PaginationParams {
+  limit: number;
+  page: number;
+}
 
-  const limit = Number(query.limit) || 10;
-  const page = Number(query.page) || 1;
-  const skip = (page - 1) * limit;
-  const countDocuments = await model.countDocuments();
-  const endIndex = page * limit;
-  const pagination = {};
-  pagination['totalPages'] = Math.ceil(countDocuments / limit);
-  pagination['currentPage'] = page;
+@Injectable()
+export class PaginationService {
+  async paginate(model: Model<any>, params: PaginationParams) {
+    const { limit = 10, page = 1 } = params;
+    const skip = (page - 1) * limit;
+    const countDocuments = await model.countDocuments();
+    const endIndex = page * limit;
+    const pagination = {
+      totalPages: Math.ceil(countDocuments / limit),
+      currentPage: page,
+    };
 
-  if (endIndex < countDocuments) pagination['next'] = page + 1;
-  if (skip > 0) pagination['prev'] = page - 1;
+    if (endIndex < countDocuments) pagination['next'] = page + 1;
+    if (skip > 0) pagination['prev'] = page - 1;
 
-  return {
-    pagination,
-    skip,
-    limit,
-  };
-};
+    return {
+      pagination,
+      skip,
+      limit,
+    };
+  }
+}
