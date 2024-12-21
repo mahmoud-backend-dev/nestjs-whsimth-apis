@@ -37,7 +37,7 @@ export class CategoriesService {
     query: Query,
     categoryQuery: string,
   ): Promise<object> {
-    lang = lang !== ('ar' || 'en') ? 'en' : lang;
+    lang !== 'ar' || 'en' ? 'en' : lang;
     const { limit, pagination, skip } = await paginate(
       this.categoryModel,
       query,

@@ -5,11 +5,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import {unlink} from 'fs/promises'
+import { unlink } from 'fs/promises';
 @Catch(Error)
 export class ErrorHandlerExceptionFilter implements ExceptionFilter {
   async catch(exception: Error, host: ArgumentsHost) {
-
     const customError: object = {
       message: exception['message'] || 'Something went wrong try again later',
       statusCode: exception['status'] || HttpStatus.INTERNAL_SERVER_ERROR,

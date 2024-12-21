@@ -127,8 +127,8 @@ export class UsersController {
   @Roles('owner', 'admin', 'manage roles')
   async addRole(
     @Body()
-    addRoleDto:AddRoleDto
-  ):Promise<object>{
+    addRoleDto: AddRoleDto,
+  ): Promise<object> {
     return await this.usersService.addRole(addRoleDto);
   }
 
@@ -137,8 +137,8 @@ export class UsersController {
   @Roles('owner', 'admin', 'manage roles')
   async removeRole(
     @Param()
-    removeRoleDto:RemoveRoleDto, 
-  ):Promise<object>{
+    removeRoleDto: RemoveRoleDto,
+  ): Promise<object> {
     return await this.usersService.removeRole(removeRoleDto.id);
   }
 }

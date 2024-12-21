@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -17,7 +28,7 @@ export class CategoriesController {
 
   @Post('add')
   @Roles('admin', 'owner', 'manage category')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   async createCategory(
     @Body()
     createCategoryDto: CreateCategoryDto,
@@ -29,7 +40,7 @@ export class CategoriesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'owner', 'manage category')
   async getOneCategory(
-    @Param() params: GetOneCategoryIdParamDto
+    @Param() params: GetOneCategoryIdParamDto,
   ): Promise<object> {
     return await this.categoriesService.getOneCategory(params.id);
   }
@@ -41,7 +52,7 @@ export class CategoriesController {
     @Query()
     query: queryExpress,
     @Query('category')
-    categoryQuery: string
+    categoryQuery: string,
   ): Promise<object> {
     return await this.categoriesService.getAllCategories(
       lang,
@@ -54,7 +65,7 @@ export class CategoriesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'owner', 'manage category')
   async removeCategory(
-    @Param() params: GetOneCategoryIdParamDto
+    @Param() params: GetOneCategoryIdParamDto,
   ): Promise<object> {
     return await this.categoriesService.removeCategory(params.id);
   }
@@ -64,7 +75,7 @@ export class CategoriesController {
   @Roles('admin', 'owner', 'manage category')
   async updateCategory(
     @Param() params: GetOneCategoryIdParamDto,
-    @Body() updateCategoryDto: UpdateCategoryDto
+    @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<object> {
     return await this.categoriesService.updateCategory(
       params.id,

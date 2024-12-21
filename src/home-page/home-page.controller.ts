@@ -1,4 +1,15 @@
-import { Body, Controller, Get, ParseFilePipeBuilder, Patch, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseFilePipeBuilder,
+  Patch,
+  Post,
+  UploadedFile,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { HomePageService } from './home-page.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
@@ -22,7 +33,7 @@ export class HomePageController {
   @Roles('owner', 'admin', 'manage home setting')
   @UseInterceptors(
     FileInterceptor('image', {
-      storage: setStorage('main-section')
+      storage: setStorage('main-section'),
     }),
   )
   async addMainSection(
@@ -42,7 +53,7 @@ export class HomePageController {
   @Roles('owner', 'admin', 'manage home setting')
   @UseInterceptors(
     FileInterceptor('image', {
-      storage: setStorage('main-section')
+      storage: setStorage('main-section'),
     }),
   )
   async updateMainSection(
@@ -58,38 +69,42 @@ export class HomePageController {
       updateMainSectionDto,
       image,
     );
-  };
+  }
 
   @Get('main-section')
-  async getMainSection(){
+  async getMainSection() {
     await this.homePageService.getMainSection();
-  };
+  }
 
   @Post('add/section-one')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('owner', 'admin', 'manage home setting')
   async addSectionOne(
     @Body()
-    addSectionOne:AddSectionOneDto
-  ): Promise<object>{
+    addSectionOne: AddSectionOneDto,
+  ): Promise<object> {
     return await this.homePageService.addSectionOne(addSectionOne);
-  };
+  }
 
   @Get('section-one')
-  async getSectionOne(): Promise<object>{
+  async getSectionOne(): Promise<object> {
     return await this.homePageService.getSectionOne();
-  };
+  }
 
   @Post('add/section-two')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('owner', 'admin', 'manage home setting')
-  @UseInterceptors(FilesInterceptor('images',undefined,{storage:setStorage('section-two')}))
+  @UseInterceptors(
+    FilesInterceptor('images', undefined, {
+      storage: setStorage('section-two'),
+    }),
+  )
   async addSectionTwo(
     @Body()
     addSectionTwo: AddSectionTwoDto,
     @UploadedFiles()
-    files:Express.Multer.File[]
-  ): Promise<object>{
+    files: Express.Multer.File[],
+  ): Promise<object> {
     return await this.homePageService.addSectionTwo(addSectionTwo, files);
-  };
+  }
 }
