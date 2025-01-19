@@ -18,6 +18,14 @@ async function bootstrap() {
       transform: true,
       forbidNonWhitelisted: true,
     }),
+
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
   );
 
   app.useGlobalFilters(
