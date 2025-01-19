@@ -28,35 +28,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(
-    new ErrorHandlerExceptionFilter(),
-    // To translate the class-validator errors
-    new I18nValidationExceptionFilter({
-      detailedErrors: false,
-      responseBodyFormatter(host, exc, formattedErrors) {
-        const formatError = (error) => {
-          if (
-            !error.constraints ||
-            Object.keys(error.constraints).length === 0
-          ) {
-            if (error.children && error.children.length > 0) {
-              return error.children.flatMap((child) => formatError(child));
-            }
-            return []; // No constraints and no children, return empty
-          }
-          return Object.values(error.constraints);
-        };
-
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: exc.errors.map((error) => ({
-            property: error.property,
-            message: formatError(error),
-          })),
-        };
-      },
-    }),
-  );
+  app.useGlobalFilters(new ErrorHandlerExceptionFilter());
   // enable DI for class-validator
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
